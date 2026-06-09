@@ -1,5 +1,6 @@
 ﻿const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const TokenBlacklist = require('../models/TokenBlacklist');
 const protect = async (req, res, next) => {
   let token;
 
@@ -7,10 +8,17 @@ const protect = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      const isBlacklisted = await TokenBlacklist.findOne({ token });
+      if (isBlacklisted) {
+        return res.status(401).json({ message: 'Token has been revoked' });
+      }
+
       req.user = await User.findById(decoded.id).select('-password');
       next();
     } catch (error) {
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      console.error('Auth middleware error:', error);
+      res.status(401).json({ message: 'Not authorized, token failed' });       
     }
   }
   if (!token) {

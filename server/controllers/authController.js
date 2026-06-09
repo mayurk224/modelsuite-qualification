@@ -1,6 +1,7 @@
 ﻿const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const TokenBlacklist = require('../models/TokenBlacklist');
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
@@ -62,4 +63,24 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+// @desc  Logout user
+// @route POST /api/auth/logout
+// @access Private
+const logoutUser = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.decode(token);
+
+    await TokenBlacklist.findOneAndUpdate(
+      { token },
+      { token, userId: req.user._id, expiresAt: new Date(decoded.exp * 1000) },
+      { upsert: true }
+    );
+
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, logoutUser };
