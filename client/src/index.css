@@ -462,18 +462,34 @@ input, select, textarea {
    Logout button
 ───────────────────────────────────────── */
 .logout-btn {
-  background: transparent;
-  border: none;
-  color: #4B5563;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 7px;
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: color 0.15s ease-out, background 0.15s ease-out;
+  gap: 10px;
+  padding: 9px 12px;
+  min-height: 44px;
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #4B5563;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease-out, color 0.15s ease-out, transform 0.15s ease-out;
+  will-change: transform, background;
 }
 .logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
   color: #EF4444;
-  background: rgba(239,68,68,0.1);
+  transform: translateX(2px);
+}
+.logout-btn:hover .nav-icon {
+  color: #EF4444;
+}
+.logout-btn:focus-visible {
+  outline: 2px solid #EF4444;
+  outline-offset: 2px;
 }
