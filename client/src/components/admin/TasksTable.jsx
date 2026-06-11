@@ -1,4 +1,5 @@
 import { deleteTask } from '../../api/tasks';
+import { toast } from 'sonner';
 
 /* ── SVG Action Icons ── */
 const IconEdit = () => (
@@ -47,9 +48,10 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
   const handleDelete = async (id) => {
     try {
       await deleteTask(id);
+      toast.success('Task deleted successfully');
       onRefresh();
     } catch {
-      alert('Failed to delete task');
+      toast.error('Failed to delete task');
     }
   };
 

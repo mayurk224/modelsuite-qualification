@@ -1,4 +1,5 @@
-﻿import { reviewSubmission } from '../../api/submissions';
+import { reviewSubmission } from '../../api/submissions';
+import { toast } from 'sonner';
 
 const REVIEW_STATUS_CLASS = {
   Pending:  'status-badge-Submitted',
@@ -11,10 +12,11 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
   const handleReview = async (status) => {
     try {
       await reviewSubmission(submission._id, status);
+      toast.success(`Submission ${status.toLowerCase()} successfully`);
       onReviewed();
       onClose();
     } catch (err) {
-      alert(err.response?.data?.message || 'Review action failed');
+      toast.error(err.response?.data?.message || 'Review action failed');
     }
   };
 
