@@ -42,22 +42,27 @@ const AdminDashboard = () => {
   const stats = {
     total:     tasks.length,
     open:      tasks.filter((t) => t.status === 'Open').length,
+    claimed:   tasks.filter((t) => t.status === 'Claimed').length,
     submitted: tasks.filter((t) => t.status === 'Submitted').length,
+    completed: tasks.filter((t) => t.status === 'Completed').length,
     approved:  tasks.filter((t) => t.status === 'Approved').length,
   };
 
   const statCards = [
     { label: 'Total Tasks', value: stats.total,     colorClass: 'stat-card-default', valueColor: '#E5E2E1' },
     { label: 'Open',        value: stats.open,      colorClass: 'stat-card-blue',    valueColor: '#60A5FA' },
+    { label: 'Claimed',     value: stats.claimed,   colorClass: 'stat-card-info',    valueColor: '#60A5FA' },
     { label: 'Submitted',   value: stats.submitted, colorClass: 'stat-card-info',    valueColor: '#60A5FA' },
+    { label: 'Completed',   value: stats.completed, colorClass: 'stat-card-green',   valueColor: '#34D399' },
     { label: 'Approved',    value: stats.approved,  colorClass: 'stat-card-green',   valueColor: '#34D399' },
   ];
 
   /* Filter tasks */
   const filteredTasks = tasks.filter((t) => {
-    const matchSearch = !search ||
-      t.title?.toLowerCase().includes(search.toLowerCase()) ||
-      t.assignedTo?.name?.toLowerCase().includes(search.toLowerCase());
+    const trimmedSearch = search.trim();
+    const matchSearch = !trimmedSearch ||
+      t.title?.toLowerCase().includes(trimmedSearch.toLowerCase()) ||
+      t.assignedTo?.name?.toLowerCase().includes(trimmedSearch.toLowerCase());
     const matchStatus = statusFilter === 'All' || t.status === statusFilter;
     return matchSearch && matchStatus;
   });
@@ -89,7 +94,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-4 gap-4 mb-6 page-section">
+        <div className="grid grid-cols-6 gap-4 mb-6 page-section">
           {statCards.map(({ label, value, colorClass, valueColor }) => (
             <div key={label} className={`stat-card ${colorClass}`}>
               <span className="block text-[10.5px] font-semibold uppercase tracking-[0.08em] mb-3"
@@ -148,6 +153,7 @@ const AdminDashboard = () => {
                 style={{ paddingLeft: '12px', cursor: 'pointer' }}>
                 <option value="All">All Status</option>
                 <option value="Open">Open</option>
+                <option value="Completed">Completed</option>
                 <option value="Claimed">Claimed</option>
                 <option value="Submitted">Submitted</option>
                 <option value="Approved">Approved</option>

@@ -37,6 +37,7 @@ const STATUS_CLASS = {
   Open:      'status-badge-Open',
   Claimed:   'status-badge-Claimed',
   Submitted: 'status-badge-Submitted',
+  Completed: 'status-badge-Completed',
   Approved:  'status-badge-Approved',
   Rejected:  'status-badge-Rejected',
 };
